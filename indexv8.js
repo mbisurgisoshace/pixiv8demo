@@ -1,7 +1,7 @@
-import { Application, autoDetectRenderer, Graphics } from "pixi.js";
+import { Application, autoDetectRenderer, Graphics, Container } from "pixi.js";
 
 const app = new Application();
-
+const wrapper = new Container();
 (async () => {
   await app.init({
     backgroundAlpha: 1,
@@ -18,6 +18,7 @@ const app = new Application();
   app.stage.hitArea = app.screen;
 
   document.body.appendChild(app.canvas);
+  app.stage.addChild(wrapper);
 
   for (let i = 0; i < 1000; i++) {
     const rectangle = new Graphics();
@@ -28,7 +29,7 @@ const app = new Application();
     rectangle.stroke({ width: 1, color: "0xff3300" });
     rectangle.x = app.screen.width * Math.random();
     rectangle.y = app.screen.height * Math.random();
-    app.stage.addChild(rectangle);
+    wrapper.addChild(rectangle);
   }
 
   // or
@@ -72,8 +73,8 @@ const app = new Application();
     if (!lastPos) delta = { x: startPos.x - e.x, y: startPos.y - e.y };
     else delta = { x: e.x - lastPos.x, y: e.y - lastPos.y };
     lastPos = { x: e.x, y: e.y };
-    app.stage.x += delta.x;
-    app.stage.y += delta.y;
+    wrapper.x += delta.x;
+    wrapper.y += delta.y;
   }
   function onUP(e) {
     isKeyDown = false;
@@ -83,7 +84,7 @@ const app = new Application();
   function onWheel(e) {
     const v = e.deltaY < 0 ? 1 : -1;
     const s = (v * smoothZoom) / 1000;
-    app.stage.scale.x += s;
-    app.stage.scale.y += s;
+    wrapper.scale.x += s;
+    wrapper.scale.y += s;
   }
 })();
