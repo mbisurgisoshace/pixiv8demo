@@ -77,12 +77,6 @@ const app = new Application();
   }
   function onUP(e) {
     isKeyDown = false;
-
-    if (dragTarget) {
-      app.stage.off("pointermove", onDragMove);
-      dragTarget.alpha = 1;
-      dragTarget = null;
-    }
   }
 
   const smoothZoom = 60;
