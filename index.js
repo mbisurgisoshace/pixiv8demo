@@ -41,7 +41,7 @@ for (let i = 0; i < 1000; i++) {
   rectangle.y = app.screen.height * Math.random();
   app.stage.addChild(rectangle);
 }
-
+const smoothZoom = 60;
 let startPos, lastPos, delta, isKeyDown;
 addEventListener("pointerdown", onDown);
 addEventListener("pointermove", onMove);
@@ -68,7 +68,6 @@ function onUP(e) {
   isKeyDown = false;
 }
 
-const smoothZoom = 60;
 function onWheel(e) {
   const v = e.deltaY < 0 ? 1 : -1;
   const s = (v * smoothZoom) / 1000;
