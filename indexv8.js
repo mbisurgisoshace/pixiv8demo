@@ -24,8 +24,10 @@ const wrapper = new Container();
     const rectangle = new Graphics();
     rectangle.rect(0, 0, 64, 64);
     rectangle.fill(0x66ccff);
-    // rectangle.eventMode = "static";
-    // rectangle.on("pointerdown", onDragStart, rectangle);
+    rectangle.eventMode = "static";
+    rectangle.cursor = 'pointer';
+    rectangle.pivot = {x: 32, y: 32};
+    rectangle.on("pointerdown", onDragStart, rectangle);
     rectangle.stroke({ width: 1, color: "0xff3300" });
     rectangle.x = app.screen.width * Math.random();
     rectangle.y = app.screen.height * Math.random();
@@ -41,27 +43,27 @@ const wrapper = new Container();
   app.stage.on("pointerup", onUP);
   app.stage.on("wheel", onWheel);
   //app.stage.on("pointerup", onDragEnd);
-  //app.stage.on("pointerupoutside", onDragEnd);
+  app.stage.on("pointerupoutside", onDragEnd);
 
-  //   function onDragMove(event) {
-  //     if (dragTarget) {
-  //       dragTarget.parent.toLocal(event.global, null, dragTarget.position);
-  //     }
-  //   }
+    function onDragMove(event) {
+      if (dragTarget) {
+        dragTarget.parent.toLocal(event.global, null, dragTarget.position);
+      }
+    }
 
-  //   function onDragStart() {
-  //     this.alpha = 0.5;
-  //     dragTarget = this;
-  //     app.stage.on("pointermove", onDragMove);
-  //   }
+    function onDragStart() {
+      this.alpha = 0.5;
+      dragTarget = this;
+      app.stage.on("pointermove", onDragMove);
+    }
 
-  //   function onDragEnd() {
-  //     if (dragTarget) {
-  //       app.stage.off("pointermove", onDragMove);
-  //       dragTarget.alpha = 1;
-  //       dragTarget = null;
-  //     }
-  //   }
+    function onDragEnd() {
+      if (dragTarget) {
+        app.stage.off("pointermove", onDragMove);
+        dragTarget.alpha = 1;
+        dragTarget = null;
+      }
+    }
 
   function onDown(e) {
     isKeyDown = true;
@@ -69,6 +71,7 @@ const wrapper = new Container();
     lastPos = null;
   }
   function onMove(e) {
+    if (dragTarget) return;
     if (!isKeyDown) return;
     if (!lastPos) delta = { x: startPos.x - e.x, y: startPos.y - e.y };
     else delta = { x: e.x - lastPos.x, y: e.y - lastPos.y };
@@ -78,6 +81,13 @@ const wrapper = new Container();
   }
   function onUP(e) {
     isKeyDown = false;
+
+    if (dragTarget)
+    {
+        app.stage.off('pointermove', onDragMove);
+        dragTarget.alpha = 1;
+        dragTarget = null;
+    }
   }
 
   const smoothZoom = 60;
